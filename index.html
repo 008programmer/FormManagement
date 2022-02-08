@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            font-family: sans-serif;
+        }
+
+        body {
+            padding: 40px;
+            ;
+        }
+
+        [input-container_] {
+            padding: 4px;
+        }
+
+        [input-label_]:after {
+            content: " *";
+            color: red;
+        }
+
+        [input-error_] {
+            color: red;
+        }
+
+
+
+        .visible-none {
+            visibility: hidden;
+        }
+
+        .error-summary {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            max-width: 500px;
+            padding: 20px;
+            color: white;
+        }
+
+        .error-summary:empty {
+            display: none;
+        }
+    </style>
+
+    <script src="~/js/form.js" asp-append-version="true"></script>
+
+    <form action="" id="form-abc">
+        <div input-container_>
+            <label for="fname" input-label_>first name</label>
+            <input id="fname" type="text" input-required_>
+            <div>
+                <label class="visible-none" input-error_>first name is required</label>
+            </div>
+        </div>
+
+        <div input-container_>
+            <label for="lname" input-label_>last name</label>
+            <input id="lname" type="text" input-required_>
+            <div>
+                <label class="visible-none" input-error_>last name is required</label>
+            </div>
+        </div>
+
+        <div>
+            <label for="fname"></label>
+            <input id="btn" type="button" value="Submit">
+        </div>
+
+        <div id='error-summary' class="error-summary" style="display: none;">
+        </div>
+
+    </form>
+
+    <script>
+        function formManagement(formId) {
+
+            let FORMTAG = document.getElementById(formId);
+
+            let validationSummaryType = {
+
+                inline: "inline",
+
+                outsideBox: "outsideBox"
+            };
+
+            let validationCheckType = {
+
+                submit: "submit",
+
+                onchange: "onchange"
+
+            };
+
+            function manageForm(validationSummaryType = this.validationSummaryType.inline, validationCheckType = this.validationCheckType.submit) {
+                debugger;
+
+                let validationTags = {
+
+                    container: '[input-container_]',
+
+                    error: '[input-error_]',
+
+                    inputTag: '[input-required_]',
+
+                    label: '[input-label_]',
+
+                }
+
+
+                const UTILS = {
+
+                    hideTag: (e) => e.classList.add("visible-none"),
+
+                    showTag: (e) => e.classList.remove("visible-none"),
+
+                    getInputErrorMsg: (e) => e.textContent
+
+                };
+
+                let summaryContainer = FORMTAG.querySelector('#error-summary');
+
+
+                FORMTAG.querySelector('#btn').addEventListener("click", (e) => {
+
+                    summaryContainer.textContent = '';
+
+                    makeErrorSummaryHide();
+
+                    [...FORMTAG.querySelectorAll(validationTags.container)].forEach((e) => {
+                        validateRequiredFields.call(this, e);
+                    });
+
+                });
+
+                let a = (e) => {
+
+                    debugger
+
+                    FORMTAG.querySelector('#error-summary').textContent = '';
+
+                    makeErrorSummaryHide();
+
+                    [...FORMTAG.querySelectorAll(validationTags.container)].forEach();
+
+                }
+
+                [...FORMTAG.querySelectorAll(validationTags.inputTag)].forEach(e => e.addEventListener("change", a));
+
+
+                function validateRequiredFields(container) {
+                    debugger
+                    if (!container.querySelector(validationTags.inputTag).value) {
+
+                        if (validationSummaryType == this.validationSummaryType.inline) {
+
+                            UTILS.showTag(container.querySelector(validationTags.error));
+
+                        } else {
+
+                            let txt = UTILS.getInputErrorMsg(container.querySelector(validationTags.error));
+
+                            summaryContainer.style.display = "block";
+
+                            let pTag = document.createElement('p');
+
+                            pTag.textContent = txt;
+
+                            summaryContainer.append(pTag);
+
+                            makeErrorSummaryVisible();
+
+                        }
+
+                    }
+
+                }
+
+
+                function initInputValidation() {
+
+                    [...FORMTAG.querySelectorAll(validationTags.container)].forEach((container) => {
+
+                        UTILS.hideTag(container.querySelector(validationTags.required));
+
+                    });
+
+                }
+
+
+
+                //function changeErrorType($this) {
+
+                //    let selectedErrorDisplayType = $this.value;
+
+                //    validationTags.validationSummaryType = selectedErrorDisplayType == validationSummaryType.outsideBox
+
+                //        ? validationSummaryType.outsideBox
+
+                //        : validationSummaryType.inline
+
+                //}
+
+
+
+                function makeErrorSummaryVisible(params) {
+
+                    summaryContainer.style.background = 'red';
+
+                }
+
+                function makeErrorSummaryHide(params) {
+
+                    summaryContainer.style.background = 'white';
+                }
+
+            }
+
+            return { start: manageForm, validationSummaryType, validationCheckType };
+
+        }
+
+        let d = formManagement('form-abc');
+        d.start();//Default Values will be used; Console.log(d) for Configs
+
+
+
+    </script>
+
+</body>
+
+</html>
